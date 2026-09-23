@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -305,7 +306,7 @@
       nameInput.value = ''; qtyInput.value = ''; nameInput.focus();
     }).catch(function(err){
       console.error('add failed', err);
-      showBanner('Não deu pra adicionar o item agora. Tenta de novo em instantes.');
+      showBanner('Não deu pra adicionar o item. Código: ' + (err && err.code ? err.code : 'desconhecido') + '. Mensagem: ' + (err && err.message ? err.message : 'sem detalhes') + '.');
     }).finally(function(){ addBtn.disabled = false; });
   });
 
@@ -340,7 +341,18 @@
     }
     var db = firebase.firestore();
     itemsRef = db.collection('itens');
+
+    var gotFirstSnapshot = false;
+    var watchdog = setTimeout(function(){
+      if(!gotFirstSnapshot){
+        setSyncOffline('Demorando pra conectar');
+        showBanner('Isso está demorando mais que o normal. Confira sua internet, confira se a restrição de domínio da chave do Firebase foi removida (ou aponta certinho pro site), e tenta recarregar a página.');
+      }
+    }, 10000);
+
     itemsRef.orderBy('createdAt', 'asc').onSnapshot(function(snap){
+      gotFirstSnapshot = true;
+      clearTimeout(watchdog);
       var next = {};
       snap.forEach(function(doc){
         var data = doc.data() || {};
@@ -357,9 +369,11 @@
       hideBanner();
       render();
     }, function(err){
+      gotFirstSnapshot = true;
+      clearTimeout(watchdog);
       console.error('subscription error', err);
       setSyncOffline('Conexão perdida');
-      showBanner('Perdemos a conexão com a lista. Verifique sua internet ou recarregue a página.');
+      showBanner('Erro ao conectar com a lista. Código: ' + (err && err.code ? err.code : 'desconhecido') + '. Mensagem: ' + (err && err.message ? err.message : 'sem detalhes') + '.');
     });
   }
 
