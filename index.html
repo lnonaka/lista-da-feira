@@ -254,17 +254,23 @@
     /* ITEM */
 
     .item{
-      display:flex;
-      align-items:center;
-      gap:9px;
-      padding:12px 13px;
-      border-bottom:1px solid var(--border);
       background:var(--surface);
+      border-bottom:1px solid var(--border);
     }
 
     .item:last-child{
       border-bottom:0;
     }
+
+    .item-row{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      padding:12px 13px;
+      min-height:58px;
+    }
+
+    /* DRAG */
 
     .drag{
       width:24px;
@@ -272,16 +278,31 @@
       display:grid;
       place-items:center;
       color:#B3B1A6;
-      font-size:17px;
+      font-size:18px;
+      line-height:1;
       cursor:grab;
       user-select:none;
       touch-action:none;
       flex:none;
+
+      /* Remove aparência padrão do button */
+      border:0;
+      background:transparent;
+      padding:0;
+      margin:0;
+      box-shadow:none;
+      outline:none;
+    }
+
+    .drag:hover{
+      color:var(--soft);
     }
 
     .drag:active{
       cursor:grabbing;
     }
+
+    /* CHECK */
 
     .check{
       width:23px;
@@ -312,6 +333,8 @@
       opacity:1;
     }
 
+    /* NAME */
+
     .main{
       flex:1;
       min-width:0;
@@ -327,6 +350,8 @@
       text-decoration:line-through;
       color:var(--soft);
     }
+
+    /* QUANTITY */
 
     .quantity-area{
       display:flex;
@@ -346,6 +371,10 @@
       padding:0;
     }
 
+    .qty-button:hover{
+      border-color:var(--accent);
+    }
+
     .qty-input{
       width:42px;
       height:28px;
@@ -354,6 +383,8 @@
       border-radius:8px;
       font-size:14px;
     }
+
+    /* REMOVE */
 
     .remove{
       width:28px;
@@ -375,7 +406,6 @@
     .item-details{
       padding:0 13px 13px 69px;
       background:var(--surface);
-      border-bottom:1px solid var(--border);
       display:flex;
       align-items:center;
       gap:10px;
@@ -478,6 +508,7 @@
     /* MOBILE */
 
     @media(max-width:520px){
+
       body{
         padding:18px 12px 30px;
       }
@@ -502,7 +533,7 @@
         gap:3px;
       }
 
-      .item{
+      .item-row{
         gap:7px;
       }
 
@@ -529,37 +560,68 @@
 
 <div class="app">
 
+  <!-- HEADER -->
+
   <header>
     <div class="eyebrow">Lista compartilhada</div>
+
     <h1>Lista de Compras</h1>
+
     <p class="sub" id="status">
       <span class="dot"></span>
       Conectando…
     </p>
   </header>
 
+
   <!-- TOTAL -->
+
   <div class="card total-card">
+
     <div>
-      <div class="total-label">Total da compra</div>
-      <div class="total-value" id="total">R$ 0,00</div>
+      <div class="total-label">
+        Total da compra
+      </div>
+
+      <div class="total-value" id="total">
+        R$ 0,00
+      </div>
     </div>
 
     <div class="total-info">
-      <div><strong id="cartCount">0</strong> no carrinho</div>
-      <div id="withoutPrice">Nenhum item sem preço</div>
+      <div>
+        <strong id="cartCount">0</strong>
+        no carrinho
+      </div>
+
+      <div id="withoutPrice">
+        Nenhum item sem preço
+      </div>
     </div>
+
   </div>
 
+
+  <!-- ROOM -->
+
   <div class="card room">
+
     Lista:
+
     <code id="room"></code>
+
   </div>
+
+
+  <!-- BANNER -->
 
   <div class="banner" id="banner"></div>
 
-  <!-- ADD -->
+
+  <!-- ADD PRODUCT -->
+
   <form class="card" id="form">
+
     <input
       id="name"
       placeholder="Produto (ex.: leite, tomate)"
@@ -578,54 +640,108 @@
       autocomplete="off"
     >
 
-    <button class="add" id="add" type="submit">
+    <button
+      class="add"
+      id="add"
+      type="submit"
+    >
       + Adicionar
     </button>
+
   </form>
 
+
   <!-- A COMPRAR -->
+
   <section class="section">
+
     <div class="section-title">
+
       <h2>A comprar</h2>
-      <span class="section-count" id="todoCount">0 itens</span>
+
+      <span
+        class="section-count"
+        id="todoCount"
+      >
+        0 itens
+      </span>
+
     </div>
 
     <div class="card list-card">
+
       <ul id="todoList"></ul>
 
-      <div class="empty" id="todoEmpty">
+      <div
+        class="empty"
+        id="todoEmpty"
+      >
         <strong>Nada para comprar</strong>
+
         Os produtos adicionados aparecerão aqui.
       </div>
+
     </div>
+
   </section>
 
+
   <!-- NO CARRINHO -->
+
   <section class="section">
+
     <div class="section-title">
+
       <h2>No carrinho</h2>
-      <span class="section-count" id="doneCount">0 itens</span>
+
+      <span
+        class="section-count"
+        id="doneCount"
+      >
+        0 itens
+      </span>
+
     </div>
 
     <div class="card list-card">
+
       <ul id="doneList"></ul>
 
-      <div class="empty" id="doneEmpty">
+      <div
+        class="empty"
+        id="doneEmpty"
+      >
         <strong>Carrinho vazio</strong>
+
         Marque um produto quando ele estiver no carrinho.
       </div>
+
     </div>
+
   </section>
 
+
+  <!-- CLEAR -->
+
   <div class="bar">
+
     <span>
-      <b id="clearCount">0</b> comprados
+      <b id="clearCount">0</b>
+      comprados
     </span>
 
-    <button class="clear" id="clear" type="button">
+    <button
+      class="clear"
+      id="clear"
+      type="button"
+    >
       Limpar comprados
     </button>
+
   </div>
+
+
+  <!-- FOOTER -->
 
   <footer>
     As alterações são sincronizadas em tempo real entre os dispositivos.
@@ -633,13 +749,22 @@
 
 </div>
 
+
 <!-- SUPABASE -->
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <!-- SORTABLE -->
+
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 
+
 <script>
+
+/* ==================================================
+   SUPABASE
+================================================== */
 
 const SUPABASE_URL =
   "https://waqgnlwuhiqrlrifhvdc.supabase.co";
@@ -648,15 +773,18 @@ const SUPABASE_ANON_KEY =
   "sb_publishable_BtMh8IByUaM3ih4sJ8vbuQ_jI__B39y";
 
 
-// --------------------------------------------------
-// SALA / LISTA
-// --------------------------------------------------
+/* ==================================================
+   ROOM / LISTA
+================================================== */
 
-const params = new URLSearchParams(location.search);
+const params =
+  new URLSearchParams(location.search);
 
-let room = params.get("lista");
+let room =
+  params.get("lista");
 
 if(!room){
+
   room =
     localStorage.getItem("lista-feira-room")
     || "familia";
@@ -664,85 +792,154 @@ if(!room){
   history.replaceState(
     null,
     "",
-    "?lista=" + encodeURIComponent(room)
+    "?lista=" +
+    encodeURIComponent(room)
   );
 }
 
-localStorage.setItem("lista-feira-room", room);
+localStorage.setItem(
+  "lista-feira-room",
+  room
+);
 
-document.getElementById("room").textContent = room;
-
-
-// --------------------------------------------------
-// ELEMENTOS
-// --------------------------------------------------
-
-const statusEl = document.getElementById("status");
-const bannerEl = document.getElementById("banner");
-
-const todoList = document.getElementById("todoList");
-const doneList = document.getElementById("doneList");
-
-const todoEmpty = document.getElementById("todoEmpty");
-const doneEmpty = document.getElementById("doneEmpty");
-
-const form = document.getElementById("form");
-const nameEl = document.getElementById("name");
-const qtyEl = document.getElementById("qty");
-const addBtn = document.getElementById("add");
-
-const totalEl = document.getElementById("total");
-const cartCountEl = document.getElementById("cartCount");
-const withoutPriceEl = document.getElementById("withoutPrice");
-
-const todoCountEl = document.getElementById("todoCount");
-const doneCountEl = document.getElementById("doneCount");
-
-const clearBtn = document.getElementById("clear");
-const clearCountEl = document.getElementById("clearCount");
+document.getElementById(
+  "room"
+).textContent = room;
 
 
-// --------------------------------------------------
-// ESTADO
-// --------------------------------------------------
+/* ==================================================
+   ELEMENTOS
+================================================== */
+
+const statusEl =
+  document.getElementById("status");
+
+const bannerEl =
+  document.getElementById("banner");
+
+const todoList =
+  document.getElementById("todoList");
+
+const doneList =
+  document.getElementById("doneList");
+
+const todoEmpty =
+  document.getElementById("todoEmpty");
+
+const doneEmpty =
+  document.getElementById("doneEmpty");
+
+const form =
+  document.getElementById("form");
+
+const nameEl =
+  document.getElementById("name");
+
+const qtyEl =
+  document.getElementById("qty");
+
+const addBtn =
+  document.getElementById("add");
+
+const totalEl =
+  document.getElementById("total");
+
+const cartCountEl =
+  document.getElementById("cartCount");
+
+const withoutPriceEl =
+  document.getElementById("withoutPrice");
+
+const todoCountEl =
+  document.getElementById("todoCount");
+
+const doneCountEl =
+  document.getElementById("doneCount");
+
+const clearBtn =
+  document.getElementById("clear");
+
+const clearCountEl =
+  document.getElementById("clearCount");
+
+
+/* ==================================================
+   ESTADO
+================================================== */
 
 let client = null;
+
 let items = [];
 
 
-// --------------------------------------------------
-// UTILITÁRIOS
-// --------------------------------------------------
+/* ==================================================
+   MENSAGENS
+================================================== */
 
 function banner(message){
-  bannerEl.textContent = message;
-  bannerEl.classList.add("show");
+
+  bannerEl.textContent =
+    message;
+
+  bannerEl.classList.add(
+    "show"
+  );
 }
+
 
 function hideBanner(){
-  bannerEl.classList.remove("show");
+
+  bannerEl.classList.remove(
+    "show"
+  );
 }
 
-function status(text, offline=false){
-  statusEl.classList.toggle("offline", offline);
+
+function status(
+  text,
+  offline=false
+){
+
+  statusEl.classList.toggle(
+    "offline",
+    offline
+  );
 
   statusEl.innerHTML =
-    '<span class="dot"></span>' + text;
+    '<span class="dot"></span>' +
+    text;
 }
 
+
+/* ==================================================
+   SEGURANÇA HTML
+================================================== */
+
 function esc(value){
-  return String(value ?? "")
-    .replace(/[&<>"']/g, char => ({
+
+  return String(
+    value ?? ""
+  ).replace(
+    /[&<>"']/g,
+    char => ({
       "&":"&amp;",
       "<":"&lt;",
       ">":"&gt;",
       '"':"&quot;",
       "'":"&#39;"
-    }[char]));
+    }[char])
+  );
 }
 
+
+/* ==================================================
+   DINHEIRO
+================================================== */
+
 function money(value){
-  const number = Number(value) || 0;
+
+  const number =
+    Number(value) || 0;
 
   return number.toLocaleString(
     "pt-BR",
@@ -753,803 +950,1307 @@ function money(value){
   );
 }
 
+
 function parsePrice(value){
 
-  if(value === null || value === undefined){
+  if(
+    value === null ||
+    value === undefined
+  ){
+
     return null;
   }
 
-  let text = String(value)
-    .trim()
-    .replace(/[R$\s]/g,"");
+  let text =
+    String(value)
+      .trim()
+      .replace(
+        /[R$\s]/g,
+        ""
+      );
 
   if(!text){
+
     return null;
   }
 
-  // 1.234,56
-  if(text.includes(",") && text.includes(".")){
-    text = text.replace(/\./g,"").replace(",",".");
+
+  /*
+    Exemplo:
+    1.234,56
+  */
+
+  if(
+    text.includes(",") &&
+    text.includes(".")
+  ){
+
+    text =
+      text
+        .replace(/\./g,"")
+        .replace(",",".");
   }
 
-  // 12,50
-  else if(text.includes(",")){
-    text = text.replace(",",".");
+  /*
+    Exemplo:
+    12,50
+  */
+
+  else if(
+    text.includes(",")
+  ){
+
+    text =
+      text.replace(",",".");
   }
 
-  const number = Number(text);
 
-  return Number.isFinite(number) && number >= 0
-    ? number
-    : null;
+  const number =
+    Number(text);
+
+  if(
+    Number.isFinite(number) &&
+    number >= 0
+  ){
+
+    return number;
+  }
+
+  return null;
 }
+
+
+/* ==================================================
+   QUANTIDADE
+================================================== */
 
 function quantityValue(item){
 
-  const number = parseInt(item.qty,10);
+  const number =
+    parseInt(
+      item.qty,
+      10
+    );
 
-  return Number.isFinite(number) && number > 0
-    ? number
-    : 1;
+  if(
+    Number.isFinite(number) &&
+    number > 0
+  ){
+
+    return number;
+  }
+
+  return 1;
 }
 
+
 function formatCount(number){
+
   return number === 1
     ? "1 item"
     : `${number} itens`;
 }
 
 
-// --------------------------------------------------
-// ORDENAÇÃO
-// --------------------------------------------------
+/* ==================================================
+   ORDENAÇÃO
+================================================== */
 
 function sortItems(list){
 
-  return [...list].sort((a,b) => {
+  return [...list].sort(
+    (a,b) => {
 
-    const orderA =
-      a.sort_order !== null &&
-      a.sort_order !== undefined
-        ? Number(a.sort_order)
-        : new Date(a.created_at).getTime();
+      const orderA =
+        a.sort_order !== null &&
+        a.sort_order !== undefined
 
-    const orderB =
-      b.sort_order !== null &&
-      b.sort_order !== undefined
-        ? Number(b.sort_order)
-        : new Date(b.created_at).getTime();
+          ? Number(a.sort_order)
 
-    return orderA - orderB;
-  });
+          : new Date(
+              a.created_at
+            ).getTime();
+
+
+      const orderB =
+        b.sort_order !== null &&
+        b.sort_order !== undefined
+
+          ? Number(b.sort_order)
+
+          : new Date(
+              b.created_at
+            ).getTime();
+
+
+      return orderA - orderB;
+
+    }
+  );
 }
 
 
-// --------------------------------------------------
-// RENDER
-// --------------------------------------------------
+/* ==================================================
+   HTML DE UM ITEM
+================================================== */
 
 function itemHTML(item){
 
-  const qty = quantityValue(item);
+  const qty =
+    quantityValue(item);
 
-  const price = item.unit_price !== null &&
-                item.unit_price !== undefined
-                ? Number(item.unit_price)
-                : null;
+
+  const price =
+    item.unit_price !== null &&
+    item.unit_price !== undefined
+
+      ? Number(
+          item.unit_price
+        )
+
+      : null;
+
 
   const itemTotal =
     price !== null
+
       ? price * qty
+
       : null;
 
+
+  const formattedPrice =
+    price !== null
+
+      ? price.toLocaleString(
+          "pt-BR",
+          {
+            minimumFractionDigits:2,
+            maximumFractionDigits:2
+          }
+        )
+
+      : "";
+
+
   return `
+
     <li
       class="item ${item.checked ? "checked" : ""}"
       data-id="${item.id}"
     >
 
-      <button
-        class="drag"
-        type="button"
-        aria-label="Arrastar ${esc(item.name)}"
-        title="Arrastar para reorganizar"
-      >☷</button>
+      <div class="item-row">
 
-      <button
-        class="check"
-        type="button"
-        data-toggle="${item.id}"
-        aria-label="${item.checked ? "Desmarcar" : "Marcar"} ${esc(item.name)}"
-      ></button>
+        <!-- DRAG -->
 
-      <div class="main">
-        <div class="name">
-          ${esc(item.name)}
+        <button
+          class="drag"
+          type="button"
+          aria-label="Arrastar ${esc(item.name)}"
+          title="Arrastar para reorganizar"
+        >☷</button>
+
+
+        <!-- CHECK -->
+
+        <button
+          class="check"
+          type="button"
+          data-toggle="${item.id}"
+          aria-label="${
+            item.checked
+              ? "Desmarcar"
+              : "Marcar"
+          } ${esc(item.name)}"
+        ></button>
+
+
+        <!-- NAME -->
+
+        <div class="main">
+
+          <div class="name">
+            ${esc(item.name)}
+          </div>
+
         </div>
-      </div>
 
-      <div class="quantity-area">
+
+        <!-- QUANTITY -->
+
+        <div class="quantity-area">
+
+          <button
+            class="qty-button"
+            type="button"
+            data-qty-minus="${item.id}"
+          >−</button>
+
+
+          <input
+            class="qty-input"
+            type="number"
+            min="1"
+            step="1"
+            value="${qty}"
+            data-qty-input="${item.id}"
+            aria-label="Quantidade de ${esc(item.name)}"
+          >
+
+
+          <button
+            class="qty-button"
+            type="button"
+            data-qty-plus="${item.id}"
+          >+</button>
+
+        </div>
+
+
+        <!-- REMOVE -->
 
         <button
-          class="qty-button"
+          class="remove"
           type="button"
-          data-qty-minus="${item.id}"
-        >−</button>
-
-        <input
-          class="qty-input"
-          type="number"
-          min="1"
-          step="1"
-          value="${qty}"
-          data-qty-input="${item.id}"
-          aria-label="Quantidade de ${esc(item.name)}"
-        >
-
-        <button
-          class="qty-button"
-          type="button"
-          data-qty-plus="${item.id}"
-        >+</button>
+          data-remove="${item.id}"
+          aria-label="Remover ${esc(item.name)}"
+        >×</button>
 
       </div>
 
-      <button
-        class="remove"
-        type="button"
-        data-remove="${item.id}"
-        aria-label="Remover ${esc(item.name)}"
-      >×</button>
+
+      ${
+        item.checked
+
+        ? `
+
+          <div class="item-details">
+
+            <div class="price-group">
+
+              <span class="price-label">
+                Preço un.
+              </span>
+
+              <input
+                class="price-input"
+                type="text"
+                inputmode="decimal"
+                placeholder="R$ 0,00"
+                value="${formattedPrice}"
+                data-price="${item.id}"
+                aria-label="Preço unitário de ${esc(item.name)}"
+              >
+
+            </div>
+
+
+            <div class="item-total">
+
+              ${
+                itemTotal !== null
+
+                  ? `
+                    Total:
+                    <strong>
+                      ${money(itemTotal)}
+                    </strong>
+                  `
+
+                  : "Sem preço"
+              }
+
+            </div>
+
+          </div>
+
+        `
+
+        : ""
+      }
 
     </li>
 
-    ${
-      item.checked
-      ? `
-        <div class="item-details" data-details="${item.id}">
-
-          <div class="price-group">
-
-            <span class="price-label">
-              Preço un.
-            </span>
-
-            <input
-              class="price-input"
-              type="text"
-              inputmode="decimal"
-              placeholder="R$ 0,00"
-              value="${
-                price !== null
-                  ? price.toLocaleString("pt-BR", {
-                      minimumFractionDigits:2,
-                      maximumFractionDigits:2
-                    })
-                  : ""
-              }"
-              data-price="${item.id}"
-              aria-label="Preço unitário de ${esc(item.name)}"
-            >
-
-          </div>
-
-          <div class="item-total">
-            ${
-              itemTotal !== null
-                ? `Total: <strong>${money(itemTotal)}</strong>`
-                : "Sem preço"
-            }
-          </div>
-
-        </div>
-      `
-      : ""
-    }
   `;
 }
 
+
+/* ==================================================
+   RENDER
+================================================== */
+
 function render(){
 
-  const todo = sortItems(
-    items.filter(item => !item.checked)
-  );
+  const todo =
+    sortItems(
+      items.filter(
+        item => !item.checked
+      )
+    );
 
-  const done = sortItems(
-    items.filter(item => item.checked)
-  );
+
+  const done =
+    sortItems(
+      items.filter(
+        item => item.checked
+      )
+    );
+
 
   todoList.innerHTML =
-    todo.map(itemHTML).join("");
+    todo
+      .map(itemHTML)
+      .join("");
+
 
   doneList.innerHTML =
-    done.map(itemHTML).join("");
+    done
+      .map(itemHTML)
+      .join("");
+
 
   todoEmpty.style.display =
-    todo.length ? "none" : "block";
+    todo.length
+      ? "none"
+      : "block";
+
 
   doneEmpty.style.display =
-    done.length ? "none" : "block";
+    done.length
+      ? "none"
+      : "block";
 
 
-  // Contadores
+  /* CONTADORES */
 
   todoCountEl.textContent =
-    formatCount(todo.length);
+    formatCount(
+      todo.length
+    );
+
 
   doneCountEl.textContent =
-    formatCount(done.length);
+    formatCount(
+      done.length
+    );
+
 
   cartCountEl.textContent =
     done.length;
+
 
   clearCountEl.textContent =
     done.length;
 
 
-  // Total
+  /* TOTAL */
 
   let total = 0;
+
   let withoutPrice = 0;
+
 
   done.forEach(item => {
 
     const price =
       item.unit_price !== null &&
       item.unit_price !== undefined
-        ? Number(item.unit_price)
+
+        ? Number(
+            item.unit_price
+          )
+
         : null;
 
-    const qty = quantityValue(item);
 
-    if(price !== null && Number.isFinite(price)){
-      total += price * qty;
+    const qty =
+      quantityValue(item);
+
+
+    if(
+      price !== null &&
+      Number.isFinite(price)
+    ){
+
+      total +=
+        price * qty;
+
     }else{
+
       withoutPrice++;
+
     }
 
   });
 
-  totalEl.textContent = money(total);
 
-  if(withoutPrice === 0){
+  totalEl.textContent =
+    money(total);
+
+
+  if(
+    withoutPrice === 0
+  ){
+
     withoutPriceEl.textContent =
       "Todos os itens têm preço";
+
   }else{
+
     withoutPriceEl.textContent =
       `${withoutPrice} sem preço`;
+
   }
+
 
   initSortable();
 }
 
 
-// --------------------------------------------------
-// SUPABASE
-// --------------------------------------------------
+/* ==================================================
+   CARREGAR
+================================================== */
 
 async function load(){
 
   const {
     data,
     error
-  } = await client
-    .from("shopping_items")
-    .select("*")
-    .eq("room_id", room)
-    .order("checked", {ascending:true})
-    .order("sort_order", {ascending:true})
-    .order("created_at", {ascending:true});
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .select("*")
+      .eq(
+        "room_id",
+        room
+      )
+      .order(
+        "checked",
+        {
+          ascending:true
+        }
+      )
+      .order(
+        "sort_order",
+        {
+          ascending:true
+        }
+      )
+      .order(
+        "created_at",
+        {
+          ascending:true
+        }
+      );
+
 
   if(error){
+
     throw error;
   }
 
-  items = data || [];
+
+  items =
+    data || [];
+
 
   render();
 }
 
 
-// --------------------------------------------------
-// ADICIONAR
-// --------------------------------------------------
+/* ==================================================
+   ADICIONAR
+================================================== */
 
-async function addItem(name, qty){
+async function addItem(
+  name,
+  qty
+){
 
   const quantity =
-    parseInt(qty,10) > 0
-      ? parseInt(qty,10)
+    parseInt(
+      qty,
+      10
+    ) > 0
+
+      ? parseInt(
+          qty,
+          10
+        )
+
       : 1;
+
 
   const sortOrder =
     Date.now();
 
+
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .insert({
-      room_id:room,
-      name:name,
-      qty:String(quantity),
-      checked:false,
-      unit_price:null,
-      sort_order:sortOrder,
-      purchased_at:null
-    });
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .insert({
+
+        room_id:room,
+
+        name:name,
+
+        qty:String(
+          quantity
+        ),
+
+        checked:false,
+
+        unit_price:null,
+
+        sort_order:
+          sortOrder,
+
+        purchased_at:null
+
+      });
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// CHECKBOX
-// --------------------------------------------------
+/* ==================================================
+   CHECKBOX
+================================================== */
 
 async function toggle(id){
 
   const item =
-    items.find(x => x.id === id);
+    items.find(
+      x => x.id === id
+    );
+
 
   if(!item){
+
     return;
   }
+
 
   const newChecked =
     !item.checked;
 
+
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .update({
-      checked:newChecked,
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .update({
 
-      purchased_at:
-        newChecked
-          ? new Date().toISOString()
-          : null,
+        checked:
+          newChecked,
 
-      // Ao entrar em uma nova seção,
-      // vai para o final dela.
-      sort_order:Date.now()
-    })
-    .eq("id",id)
-    .eq("room_id",room);
+        purchased_at:
+          newChecked
+            ? new Date().toISOString()
+            : null,
+
+        sort_order:
+          Date.now()
+
+      })
+      .eq(
+        "id",
+        id
+      )
+      .eq(
+        "room_id",
+        room
+      );
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// QUANTIDADE
-// --------------------------------------------------
+/* ==================================================
+   QUANTIDADE
+================================================== */
 
-async function updateQuantity(id, quantity){
+async function updateQuantity(
+  id,
+  quantity
+){
 
   const value =
-    parseInt(quantity,10);
+    parseInt(
+      quantity,
+      10
+    );
 
-  if(!Number.isFinite(value) || value < 1){
+
+  if(
+    !Number.isFinite(value) ||
+    value < 1
+  ){
+
     return;
   }
 
+
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .update({
-      qty:String(value)
-    })
-    .eq("id",id)
-    .eq("room_id",room);
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .update({
+
+        qty:String(value)
+
+      })
+      .eq(
+        "id",
+        id
+      )
+      .eq(
+        "room_id",
+        room
+      );
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// PREÇO
-// --------------------------------------------------
+/* ==================================================
+   PREÇO
+================================================== */
 
-async function updatePrice(id, value){
+async function updatePrice(
+  id,
+  value
+){
 
   const price =
     parsePrice(value);
 
+
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .update({
-      unit_price:price
-    })
-    .eq("id",id)
-    .eq("room_id",room);
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .update({
+
+        unit_price:
+          price
+
+      })
+      .eq(
+        "id",
+        id
+      )
+      .eq(
+        "room_id",
+        room
+      );
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// REMOVER
-// --------------------------------------------------
+/* ==================================================
+   REMOVER
+================================================== */
 
 async function removeItem(id){
 
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .delete()
-    .eq("id",id)
-    .eq("room_id",room);
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .delete()
+      .eq(
+        "id",
+        id
+      )
+      .eq(
+        "room_id",
+        room
+      );
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// LIMPAR COMPRADOS
-// --------------------------------------------------
+/* ==================================================
+   LIMPAR COMPRADOS
+================================================== */
 
 async function clearBought(){
 
   const {
     error
-  } = await client
-    .from("shopping_items")
-    .delete()
-    .eq("room_id",room)
-    .eq("checked",true);
+  } =
+    await client
+      .from(
+        "shopping_items"
+      )
+      .delete()
+      .eq(
+        "room_id",
+        room
+      )
+      .eq(
+        "checked",
+        true
+      );
+
 
   if(error){
+
     throw error;
   }
 }
 
 
-// --------------------------------------------------
-// EVENTO: ADICIONAR
-// --------------------------------------------------
+/* ==================================================
+   ADICIONAR FORM
+================================================== */
 
-form.addEventListener("submit", async event => {
+form.addEventListener(
+  "submit",
+  async event => {
 
-  event.preventDefault();
-
-  const name =
-    nameEl.value.trim();
-
-  const qty =
-    qtyEl.value.trim();
-
-  if(!name || !client){
-    return;
-  }
-
-  addBtn.disabled = true;
-
-  try{
-
-    await addItem(name,qty);
-
-    nameEl.value = "";
-    qtyEl.value = "1";
-
-    nameEl.focus();
-
-  }catch(error){
-
-    console.error(error);
-
-    banner(
-      "Não foi possível adicionar o produto."
-    );
-
-  }finally{
-
-    addBtn.disabled = false;
-
-  }
-
-});
+    event.preventDefault();
 
 
-// --------------------------------------------------
-// EVENTOS DAS LISTAS
-// --------------------------------------------------
+    const name =
+      nameEl.value.trim();
 
-function setupListEvents(list){
 
-  list.addEventListener("click", async event => {
+    const qty =
+      qtyEl.value.trim();
 
-    const toggleButton =
-      event.target.closest("[data-toggle]");
 
-    const removeButton =
-      event.target.closest("[data-remove]");
+    if(
+      !name ||
+      !client
+    ){
 
-    const minusButton =
-      event.target.closest("[data-qty-minus]");
+      return;
+    }
 
-    const plusButton =
-      event.target.closest("[data-qty-plus]");
+
+    addBtn.disabled =
+      true;
 
 
     try{
 
-      // Checkbox
+      await addItem(
+        name,
+        qty
+      );
 
-      if(toggleButton){
 
-        await toggle(
-          toggleButton.dataset.toggle
+      nameEl.value =
+        "";
+
+      qtyEl.value =
+        "1";
+
+
+      nameEl.focus();
+
+
+    }catch(error){
+
+      console.error(
+        error
+      );
+
+
+      banner(
+        "Não foi possível adicionar o produto."
+      );
+
+
+    }finally{
+
+      addBtn.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+/* ==================================================
+   EVENTOS DAS LISTAS
+================================================== */
+
+function setupListEvents(list){
+
+  /* CLIQUES */
+
+  list.addEventListener(
+    "click",
+    async event => {
+
+      const toggleButton =
+        event.target.closest(
+          "[data-toggle]"
         );
 
-        return;
-      }
 
-
-      // Remover
-
-      if(removeButton){
-
-        await removeItem(
-          removeButton.dataset.remove
+      const removeButton =
+        event.target.closest(
+          "[data-remove]"
         );
 
-        return;
-      }
+
+      const minusButton =
+        event.target.closest(
+          "[data-qty-minus]"
+        );
 
 
-      // Diminuir
+      const plusButton =
+        event.target.closest(
+          "[data-qty-plus]"
+        );
 
-      if(minusButton){
 
-        const id =
-          minusButton.dataset.qtyMinus;
+      try{
 
-        const item =
-          items.find(x => x.id === id);
+        /* CHECK */
 
-        if(item){
+        if(toggleButton){
 
-          const current =
-            quantityValue(item);
+          await toggle(
+            toggleButton.dataset.toggle
+          );
 
-          if(current > 1){
+          return;
+        }
+
+
+        /* REMOVER */
+
+        if(removeButton){
+
+          await removeItem(
+            removeButton.dataset.remove
+          );
+
+          return;
+        }
+
+
+        /* DIMINUIR */
+
+        if(minusButton){
+
+          const id =
+            minusButton.dataset.qtyMinus;
+
+
+          const item =
+            items.find(
+              x => x.id === id
+            );
+
+
+          if(item){
+
+            const current =
+              quantityValue(item);
+
+
+            if(current > 1){
+
+              await updateQuantity(
+                id,
+                current - 1
+              );
+
+            }
+
+          }
+
+          return;
+        }
+
+
+        /* AUMENTAR */
+
+        if(plusButton){
+
+          const id =
+            plusButton.dataset.qtyPlus;
+
+
+          const item =
+            items.find(
+              x => x.id === id
+            );
+
+
+          if(item){
+
+            const current =
+              quantityValue(item);
+
 
             await updateQuantity(
               id,
-              current - 1
+              current + 1
             );
 
           }
 
         }
 
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+
+        banner(
+          "Não foi possível atualizar este item."
+        );
+
+      }
+
+    }
+  );
+
+
+  /* QUANTIDADE DIGITADA */
+
+  list.addEventListener(
+    "change",
+    async event => {
+
+      const input =
+        event.target.closest(
+          "[data-qty-input]"
+        );
+
+
+      if(!input){
+
         return;
       }
 
 
-      // Aumentar
+      try{
 
-      if(plusButton){
+        await updateQuantity(
+          input.dataset.qtyInput,
+          input.value
+        );
 
-        const id =
-          plusButton.dataset.qtyPlus;
 
-        const item =
-          items.find(x => x.id === id);
+      }catch(error){
 
-        if(item){
+        console.error(
+          error
+        );
 
-          const current =
-            quantityValue(item);
 
-          await updateQuantity(
-            id,
-            current + 1
+        banner(
+          "Não foi possível atualizar a quantidade."
+        );
+
+      }
+
+    }
+  );
+
+
+  /* PREÇO */
+
+  list.addEventListener(
+    "change",
+    async event => {
+
+      const input =
+        event.target.closest(
+          "[data-price]"
+        );
+
+
+      if(!input){
+
+        return;
+      }
+
+
+      try{
+
+        await updatePrice(
+          input.dataset.price,
+          input.value
+        );
+
+
+      }catch(error){
+
+        console.error(
+          error
+        );
+
+
+        banner(
+          "Não foi possível atualizar o preço."
+        );
+
+      }
+
+    }
+  );
+
+}
+
+
+setupListEvents(
+  todoList
+);
+
+setupListEvents(
+  doneList
+);
+
+
+/* ==================================================
+   LIMPAR
+================================================== */
+
+clearBtn.addEventListener(
+  "click",
+  async () => {
+
+    if(!client){
+
+      return;
+    }
+
+
+    clearBtn.disabled =
+      true;
+
+
+    try{
+
+      await clearBought();
+
+
+    }catch(error){
+
+      console.error(
+        error
+      );
+
+
+      banner(
+        "Não foi possível limpar os produtos."
+      );
+
+
+    }finally{
+
+      clearBtn.disabled =
+        false;
+
+    }
+
+  }
+);
+
+
+/* ==================================================
+   DRAG & DROP
+================================================== */
+
+let sortableTodo =
+  null;
+
+let sortableDone =
+  null;
+
+
+function initSortable(){
+
+  if(sortableTodo){
+
+    sortableTodo.destroy();
+
+  }
+
+
+  if(sortableDone){
+
+    sortableDone.destroy();
+
+  }
+
+
+  sortableTodo =
+    new Sortable(
+      todoList,
+      {
+
+        animation:160,
+
+        handle:".drag",
+
+        ghostClass:
+          "sortable-ghost",
+
+        chosenClass:
+          "sortable-chosen",
+
+        draggable:".item",
+
+        onEnd:() => {
+
+          saveOrder(
+            todoList,
+            false
           );
 
         }
 
       }
-
-    }catch(error){
-
-      console.error(error);
-
-      banner(
-        "Não foi possível atualizar este item."
-      );
-
-    }
-
-  });
-
-
-  // Quantidade digitada
-
-  list.addEventListener("change", async event => {
-
-    const input =
-      event.target.closest("[data-qty-input]");
-
-    if(!input){
-      return;
-    }
-
-    try{
-
-      await updateQuantity(
-        input.dataset.qtyInput,
-        input.value
-      );
-
-    }catch(error){
-
-      console.error(error);
-
-      banner(
-        "Não foi possível atualizar a quantidade."
-      );
-
-    }
-
-  });
-
-
-  // Preço
-
-  list.addEventListener("change", async event => {
-
-    const input =
-      event.target.closest("[data-price]");
-
-    if(!input){
-      return;
-    }
-
-    try{
-
-      await updatePrice(
-        input.dataset.price,
-        input.value
-      );
-
-    }catch(error){
-
-      console.error(error);
-
-      banner(
-        "Não foi possível atualizar o preço."
-      );
-
-    }
-
-  });
-
-}
-
-
-setupListEvents(todoList);
-setupListEvents(doneList);
-
-
-// --------------------------------------------------
-// LIMPAR
-// --------------------------------------------------
-
-clearBtn.addEventListener("click", async () => {
-
-  if(!client){
-    return;
-  }
-
-  clearBtn.disabled = true;
-
-  try{
-
-    await clearBought();
-
-  }catch(error){
-
-    console.error(error);
-
-    banner(
-      "Não foi possível limpar os produtos."
     );
-
-  }finally{
-
-    clearBtn.disabled = false;
-
-  }
-
-});
-
-
-// --------------------------------------------------
-// DRAG & DROP
-// --------------------------------------------------
-
-let sortableTodo = null;
-let sortableDone = null;
-
-function initSortable(){
-
-  if(sortableTodo){
-    sortableTodo.destroy();
-  }
-
-  if(sortableDone){
-    sortableDone.destroy();
-  }
-
-
-  sortableTodo =
-    new Sortable(todoList,{
-      animation:160,
-      handle:".drag",
-      ghostClass:"sortable-ghost",
-      chosenClass:"sortable-chosen",
-      draggable:".item",
-      onEnd:() => saveOrder(todoList,false)
-    });
 
 
   sortableDone =
-    new Sortable(doneList,{
-      animation:160,
-      handle:".drag",
-      ghostClass:"sortable-ghost",
-      chosenClass:"sortable-chosen",
-      draggable:".item",
-      onEnd:() => saveOrder(doneList,true)
-    });
+    new Sortable(
+      doneList,
+      {
+
+        animation:160,
+
+        handle:".drag",
+
+        ghostClass:
+          "sortable-ghost",
+
+        chosenClass:
+          "sortable-chosen",
+
+        draggable:".item",
+
+        onEnd:() => {
+
+          saveOrder(
+            doneList,
+            true
+          );
+
+        }
+
+      }
+    );
 
 }
 
 
-async function saveOrder(list, checked){
+/* ==================================================
+   SALVAR ORDEM
+================================================== */
+
+async function saveOrder(
+  list,
+  checked
+){
 
   const rows =
-    [...list.querySelectorAll(".item")];
+    [
+      ...list.querySelectorAll(
+        ".item"
+      )
+    ];
+
 
   try{
 
     await Promise.all(
 
-      rows.map((row,index) => {
+      rows.map(
+        (row,index) => {
 
-        return client
-          .from("shopping_items")
-          .update({
-            sort_order:index + 1
-          })
-          .eq("id",row.dataset.id)
-          .eq("room_id",room)
-          .eq("checked",checked);
+          return client
+            .from(
+              "shopping_items"
+            )
+            .update({
 
-      })
+              sort_order:
+                index + 1
+
+            })
+            .eq(
+              "id",
+              row.dataset.id
+            )
+            .eq(
+              "room_id",
+              room
+            )
+            .eq(
+              "checked",
+              checked
+            );
+
+        }
+      )
 
     );
 
+
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     banner(
       "Não foi possível salvar a ordem dos produtos."
@@ -1560,15 +2261,20 @@ async function saveOrder(list, checked){
 }
 
 
-// --------------------------------------------------
-// REALTIME
-// --------------------------------------------------
+/* ==================================================
+   BOOT
+================================================== */
 
 async function boot(){
 
   if(
-    SUPABASE_URL.startsWith("COLE_") ||
-    SUPABASE_ANON_KEY.startsWith("COLE_")
+    SUPABASE_URL.startsWith(
+      "COLE_"
+    ) ||
+
+    SUPABASE_ANON_KEY.startsWith(
+      "COLE_"
+    )
   ){
 
     status(
@@ -1576,9 +2282,11 @@ async function boot(){
       true
     );
 
+
     banner(
       "Configure a conexão com o Supabase."
     );
+
 
     return;
   }
@@ -1595,15 +2303,19 @@ async function boot(){
 
     await load();
 
+
     status(
       "Sincronizado em tempo real"
     );
+
 
     hideBanner();
 
 
     client
-      .channel("shopping-" + room)
+      .channel(
+        "shopping-" + room
+      )
 
       .on(
         "postgres_changes",
@@ -1611,7 +2323,8 @@ async function boot(){
           event:"*",
           schema:"public",
           table:"shopping_items",
-          filter:"room_id=eq." + room
+          filter:
+            "room_id=eq." + room
         },
 
         async () => {
@@ -1621,43 +2334,54 @@ async function boot(){
         }
       )
 
-      .subscribe(state => {
+      .subscribe(
+        state => {
 
-        if(state === "SUBSCRIBED"){
+          if(
+            state === "SUBSCRIBED"
+          ){
 
-          status(
-            "Sincronizado em tempo real"
-          );
+            status(
+              "Sincronizado em tempo real"
+            );
+
+          }
+
+          else if(
+            state === "CHANNEL_ERROR" ||
+            state === "TIMED_OUT"
+          ){
+
+            status(
+              "Reconectando…",
+              true
+            );
+
+          }
 
         }
+      );
 
-        else if(
-          state === "CHANNEL_ERROR" ||
-          state === "TIMED_OUT"
-        ){
-
-          status(
-            "Reconectando…",
-            true
-          );
-
-        }
-
-      });
 
   }catch(error){
 
-    console.error(error);
+    console.error(
+      error
+    );
+
 
     status(
       "Erro de conexão",
       true
     );
 
+
     banner(
       "Erro: " +
-      (error.message ||
-      "verifique a configuração do Supabase.")
+      (
+        error.message ||
+        "verifique a configuração do Supabase."
+      )
     );
 
   }
