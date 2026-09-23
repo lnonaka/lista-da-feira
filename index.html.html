@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lista da Feira</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Lista da Feira">
+<meta name="theme-color" content="#2F6B4F">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%9B%92%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@600;700;800&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+  :root{
+    --bg:#F3F1E6;
+    --surface:#FFFFFF;
+    --surface-2:#FBFAF5;
+    --ink:#23241D;
+    --ink-soft:#6E6C5C;
+    --border:#E2DDC9;
+    --accent:#2F6B4F;
+    --accent-ink:#FFFFFF;
+    --gold:#A6791F;
+    --gold-soft:#F5E9D2;
+    --danger:#A23B3B;
+    --shadow: 0 1px 2px rgba(35,36,29,0.06), 0 8px 24px -12px rgba(35,36,29,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#1B1C16;
+      --surface:#24261E;
+      --surface-2:#2A2C22;
+      --ink:#EDEAD9;
+      --ink-soft:#A9A78F;
+      --border:#3A3B2F;
+      --accent:#6FBF95;
+      --accent-ink:#12291D;
+      --gold:#E0AD5C;
+      --gold-soft:#3A2F1A;
+      --danger:#E5928F;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{ height:100%; margin:0; }
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Karla",ui-sans-serif,system-ui,-apple-system,sans-serif;
+    padding-left:16px;
+    padding-right:16px;
+    padding-top:calc(20px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+    display:flex;
+    justify-content:center;
+  }
+  h1,.display{
+    font-family:"Libre Franklin",ui-sans-serif,system-ui,-apple-system,sans-serif;
+    font-weight:800;
+    letter-spacing:-0.01em;
+  }
+  .mono{ font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace; font-variant-numeric:tabular-nums; }
+
+  .app{ width:100%; max-width:480px; display:flex; flex-direction:column; gap:14px; }
+
+  header.top{ display:flex; flex-direction:column; gap:2px; padding-inline:4px; }
+  header.top .eyebrow{
+    font-family:"Libre Franklin",sans-serif; font-weight:700; font-size:11px;
+    letter-spacing:0.12em; text-transform:uppercase; color:var(--accent);
+  }
+  header.top h1{ font-size:28px; margin:0; }
+  header.top .sub{ color:var(--ink-soft); font-size:13.5px; margin:2px 0 0; }
+  header.top .sub .dot{
+    display:inline-block; width:7px; height:7px; border-radius:50%;
+    background:var(--accent); margin-right:6px; vertical-align:middle;
+  }
+  header.top .sub.offline .dot{ background:var(--danger); }
+
+  form.add-form{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    box-shadow:var(--shadow); padding:12px; display:grid;
+    grid-template-columns:1fr 76px; gap:8px;
+  }
+  form.add-form .name-field{ grid-column:1 / -1; }
+  form.add-form input{
+    font-family:inherit; font-size:16px; color:var(--ink); background:var(--surface-2);
+    border:1px solid var(--border); border-radius:10px; padding:11px 12px; width:100%;
+  }
+  form.add-form input::placeholder{ color:var(--ink-soft); }
+  form.add-form input:focus-visible{ outline:2px solid var(--accent); outline-offset:1px; }
+  #qty-input{ grid-column:1; max-width:140px; }
+  button.add-btn{
+    grid-column:2; font-family:"Libre Franklin",sans-serif; font-weight:700; font-size:14px;
+    background:var(--accent); color:var(--accent-ink); border:none; border-radius:10px;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; padding:0 8px;
+  }
+  button.add-btn:active{ transform:translateY(1px); }
+  button.add-btn:disabled{ opacity:0.6; }
+  button.add-btn svg{ width:16px; height:16px; flex:none; }
+
+  .clear-bar{
+    display:none; align-items:center; justify-content:space-between; background:var(--gold-soft);
+    border:1px solid var(--border); border-radius:12px; padding:9px 14px; font-size:13.5px; color:var(--ink);
+  }
+  .clear-bar.visible{ display:flex; }
+  .clear-bar button{
+    font-family:"Libre Franklin",sans-serif; font-weight:700; font-size:13px; background:transparent;
+    color:var(--gold); border:1px solid var(--gold); border-radius:8px; padding:6px 10px; cursor:pointer;
+  }
+  .clear-bar button:disabled{ opacity:0.5; }
+
+  ul.items{
+    list-style:none; margin:0; padding:0; background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; box-shadow:var(--shadow); overflow:hidden;
+  }
+  ul.items li{
+    display:flex; align-items:center; gap:12px; padding:13px 14px;
+    border-bottom:1px dashed var(--border); cursor:pointer;
+  }
+  ul.items li:last-child{ border-bottom:none; }
+  ul.items li:focus-visible{ outline:2px solid var(--accent); outline-offset:-2px; }
+
+  .checkbox{
+    flex:none; width:22px; height:22px; border-radius:6px; border:2px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    transition:background 0.12s ease, border-color 0.12s ease;
+  }
+  .checkbox svg{ width:13px; height:13px; opacity:0; transform:scale(0.6); transition:opacity 0.12s ease, transform 0.12s ease; }
+  li.checked .checkbox{ background:var(--accent); border-color:var(--accent); }
+  li.checked .checkbox svg{ opacity:1; transform:scale(1); }
+
+  .item-main{ flex:1; min-width:0; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap; }
+  .item-name{ font-size:15.5px; font-weight:500; overflow-wrap:anywhere; }
+  li.checked .item-name{ color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--ink-soft); }
+  .item-qty{ font-size:11.5px; font-weight:600; color:var(--gold); background:var(--gold-soft); border-radius:999px; padding:2px 8px; flex:none; }
+  li.checked .item-qty{ opacity:0.6; }
+
+  .remove-btn{
+    flex:none; width:28px; height:28px; border-radius:8px; border:none; background:transparent;
+    color:var(--ink-soft); display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .remove-btn:hover{ color:var(--danger); }
+  .remove-btn svg{ width:15px; height:15px; }
+
+  .empty-state{ display:none; flex-direction:column; align-items:center; text-align:center; gap:10px; padding:40px 20px 44px; color:var(--ink-soft); }
+  .empty-state.visible{ display:flex; }
+  .empty-state svg{ width:64px; height:64px; color:var(--accent); opacity:0.85; }
+  .empty-state p{ margin:0; font-size:14px; max-width:26ch; }
+  .empty-state p.lead{ color:var(--ink); font-weight:700; font-size:16px; font-family:"Libre Franklin",sans-serif; }
+
+  .status-banner{ display:none; background:var(--gold-soft); border:1px solid var(--border); border-radius:12px; padding:12px 14px; font-size:13.5px; color:var(--ink); }
+  .status-banner.visible{ display:block; }
+
+  footer.hint{ text-align:center; font-size:12px; color:var(--ink-soft); padding:4px 8px 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="top">
+    <span class="eyebrow">Lista compartilhada</span>
+    <h1>Lista da Feira</h1>
+    <p class="sub" id="sync-status"><span class="dot"></span>Conectando…</p>
+  </header>
+
+  <div class="status-banner" id="status-banner"></div>
+
+  <form class="add-form" id="add-form" autocomplete="off">
+    <div class="name-field">
+      <input type="text" id="name-input" placeholder="Adicionar item (ex: leite, tomate...)" required maxlength="120">
+    </div>
+    <input type="text" id="qty-input" placeholder="Qtd" maxlength="24">
+    <button type="submit" class="add-btn" id="add-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Adicionar
+    </button>
+  </form>
+
+  <div class="clear-bar" id="clear-bar">
+    <span><strong id="checked-count" class="mono">0</strong> no carrinho</span>
+    <button type="button" id="clear-btn">Limpar comprados</button>
+  </div>
+
+  <ul class="items" id="items-list" role="list" hidden></ul>
+
+  <div class="empty-state" id="empty-state">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6L5 3H2"/><circle cx="9.5" cy="19" r="1.5"/><circle cx="17.5" cy="19" r="1.5"/>
+    </svg>
+    <p class="lead">Sua lista está vazia</p>
+    <p>Adicione o primeiro item acima. Tudo o que vocês colocarem aparece pros dois, na hora.</p>
+  </div>
+
+  <footer class="hint">Toque no item pra marcar como já no carrinho</footer>
+
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var firebaseConfig = {
+    apiKey: "AIzaSyCda3Fw5Ig-rRBQ-wkozPaDrF4oI2CFABQ",
+    authDomain: "lista-compras-casa-43c82.firebaseapp.com",
+    projectId: "lista-compras-casa-43c82",
+    storageBucket: "lista-compras-casa-43c82.firebasestorage.app",
+    messagingSenderId: "536868554862",
+    appId: "1:536868554862:web:e1712ea55f1b79e75ffe7f"
+  };
+
+  var listEl = document.getElementById('items-list');
+  var emptyEl = document.getElementById('empty-state');
+  var formEl = document.getElementById('add-form');
+  var nameInput = document.getElementById('name-input');
+  var qtyInput = document.getElementById('qty-input');
+  var addBtn = document.getElementById('add-btn');
+  var clearBar = document.getElementById('clear-bar');
+  var clearBtn = document.getElementById('clear-btn');
+  var checkedCountEl = document.getElementById('checked-count');
+  var syncStatus = document.getElementById('sync-status');
+  var statusBanner = document.getElementById('status-banner');
+
+  var itemsRef = null;
+  var docsById = {};
+  var pendingIds = {};
+
+  function showBanner(msg){ statusBanner.textContent = msg; statusBanner.classList.add('visible'); }
+  function hideBanner(){ statusBanner.classList.remove('visible'); }
+
+  function checkSvg(){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="var(--accent-ink)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 12 9 17 20 6"/></svg>';
+  }
+  function trashSvg(){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="7" x2="19" y2="7"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M6.5 7l1 13a2 2 0 0 0 2 2h5a2 2 0 0 0 2-2l1-13"/></svg>';
+  }
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; });
+  }
+
+  function render(){
+    var all = Object.keys(docsById).map(function(id){ return docsById[id]; });
+    all.sort(function(a,b){ return (a.createdAt||0) - (b.createdAt||0); });
+    var pending = all.filter(function(d){ return !d.checked; });
+    var checked = all.filter(function(d){ return d.checked; });
+    var ordered = pending.concat(checked);
+
+    if(ordered.length === 0){
+      listEl.hidden = true;
+      emptyEl.classList.add('visible');
+    } else {
+      listEl.hidden = false;
+      emptyEl.classList.remove('visible');
+    }
+
+    listEl.innerHTML = ordered.map(function(d){
+      var qtyHtml = d.qty ? '<span class="item-qty mono">' + escapeHtml(d.qty) + '</span>' : '';
+      return '<li class="' + (d.checked ? 'checked' : '') + '" data-id="' + d.id + '" role="checkbox" aria-checked="' + !!d.checked + '" tabindex="0">' +
+        '<span class="checkbox">' + checkSvg() + '</span>' +
+        '<span class="item-main"><span class="item-name">' + escapeHtml(d.name) + '</span>' + qtyHtml + '</span>' +
+        '<button type="button" class="remove-btn" data-remove="' + d.id + '" aria-label="Remover ' + escapeHtml(d.name) + '">' + trashSvg() + '</button>' +
+        '</li>';
+    }).join('');
+
+    if(checked.length > 0){
+      clearBar.classList.add('visible');
+      checkedCountEl.textContent = String(checked.length);
+    } else {
+      clearBar.classList.remove('visible');
+    }
+  }
+
+  function toggleItem(id){
+    if(!itemsRef || pendingIds[id]) return;
+    var d = docsById[id];
+    if(!d) return;
+    pendingIds[id] = true;
+    itemsRef.doc(id).update({ checked: !d.checked }).catch(function(err){ console.error('toggle failed', err); }).finally(function(){ delete pendingIds[id]; });
+  }
+  function removeItem(id){
+    if(!itemsRef || pendingIds[id]) return;
+    pendingIds[id] = true;
+    itemsRef.doc(id).delete().catch(function(err){ console.error('remove failed', err); }).finally(function(){ delete pendingIds[id]; });
+  }
+
+  listEl.addEventListener('click', function(e){
+    var removeBtn = e.target.closest('[data-remove]');
+    if(removeBtn){ e.stopPropagation(); removeItem(removeBtn.getAttribute('data-remove')); return; }
+    var li = e.target.closest('li[data-id]');
+    if(li) toggleItem(li.getAttribute('data-id'));
+  });
+  listEl.addEventListener('keydown', function(e){
+    if(e.key !== 'Enter' && e.key !== ' ') return;
+    var li = e.target.closest('li[data-id]');
+    if(li){ e.preventDefault(); toggleItem(li.getAttribute('data-id')); }
+  });
+
+  formEl.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!itemsRef) return;
+    var name = nameInput.value.trim();
+    if(!name) return;
+    var qty = qtyInput.value.trim();
+    addBtn.disabled = true;
+    itemsRef.add({ name: name, qty: qty, checked: false, createdAt: Date.now() }).then(function(){
+      nameInput.value = ''; qtyInput.value = ''; nameInput.focus();
+    }).catch(function(err){
+      console.error('add failed', err);
+      showBanner('Não deu pra adicionar o item agora. Tenta de novo em instantes.');
+    }).finally(function(){ addBtn.disabled = false; });
+  });
+
+  clearBtn.addEventListener('click', function(){
+    if(!itemsRef) return;
+    var toRemove = Object.keys(docsById).filter(function(id){ return docsById[id].checked; });
+    if(toRemove.length === 0) return;
+    clearBtn.disabled = true;
+    Promise.all(toRemove.map(function(id){ return itemsRef.doc(id).delete(); })).catch(function(err){
+      console.error('clear failed', err);
+    }).finally(function(){ clearBtn.disabled = false; });
+  });
+
+  function setSyncOk(){ syncStatus.classList.remove('offline'); syncStatus.innerHTML = '<span class="dot"></span>Sincronizado em tempo real'; }
+  function setSyncOffline(msg){ syncStatus.classList.add('offline'); syncStatus.innerHTML = '<span class="dot"></span>' + escapeHtml(msg || 'Sem conexão com a lista'); }
+
+  function boot(){
+    if(typeof firebase === 'undefined'){
+      setSyncOffline('Não carregou');
+      showBanner('Não consegui carregar as bibliotecas do Firebase. Confira sua conexão com a internet e recarregue a página.');
+      render();
+      return;
+    }
+    try{
+      firebase.initializeApp(firebaseConfig);
+    }catch(err){
+      console.error('init failed', err);
+      setSyncOffline('Erro de configuração');
+      showBanner('Não consegui iniciar o Firebase. Confira se os dados de configuração no início do arquivo estão certos.');
+      render();
+      return;
+    }
+    var db = firebase.firestore();
+    itemsRef = db.collection('itens');
+    itemsRef.orderBy('createdAt', 'asc').onSnapshot(function(snap){
+      var next = {};
+      snap.forEach(function(doc){
+        var data = doc.data() || {};
+        next[doc.id] = {
+          id: doc.id,
+          name: typeof data.name === 'string' ? data.name : '',
+          qty: typeof data.qty === 'string' ? data.qty : '',
+          checked: !!data.checked,
+          createdAt: typeof data.createdAt === 'number' ? data.createdAt : 0
+        };
+      });
+      docsById = next;
+      setSyncOk();
+      hideBanner();
+      render();
+    }, function(err){
+      console.error('subscription error', err);
+      setSyncOffline('Conexão perdida');
+      showBanner('Perdemos a conexão com a lista. Verifique sua internet ou recarregue a página.');
+    });
+  }
+
+  boot();
+})();
+</script>
+</body>
+</html>
