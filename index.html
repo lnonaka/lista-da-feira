@@ -554,6 +554,21 @@
       }
     }
   </style>
+  <!-- PWA: início -->
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Compras">
+  <style>
+    /* respeita a barrinha do iPhone embaixo quando aberto como app */
+    body{padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+    /* evita zoom/seleção acidental ao arrastar itens */
+    .drag{touch-action:none;-webkit-user-select:none;user-select:none}
+  </style>
+  <!-- PWA: fim -->
 </head>
 
 <body>
@@ -2392,6 +2407,24 @@ async function boot(){
 boot();
 
 </script>
+
+<!-- PWA: início -->
+<script>
+  // Registra o service worker (é isso que transforma o site em app instalável)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function (e) { console.warn('SW:', e); });
+    });
+  }
+  // No iPhone, quando o app fica em segundo plano a conexão em tempo real pode cair.
+  // Ao voltar para o app, recarrega a lista para não mostrar nada desatualizado.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && typeof load === 'function') {
+      try { var p = load(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+    }
+  });
+</script>
+<!-- PWA: fim -->
 
 </body>
 </html>
