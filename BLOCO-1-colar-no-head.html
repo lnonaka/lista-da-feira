@@ -1,0 +1,15 @@
+<!-- PWA: início (colar logo antes de </head>) -->
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Compras">
+<style>
+  /* respeita a barrinha do iPhone embaixo quando aberto como app */
+  body{padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+  /* evita zoom/seleção acidental ao arrastar itens */
+  .drag{touch-action:none;-webkit-user-select:none;user-select:none}
+</style>
+<!-- PWA: fim -->

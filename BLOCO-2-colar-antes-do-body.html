@@ -1,0 +1,17 @@
+<!-- PWA: início (colar logo antes de </body>) -->
+<script>
+  // Registra o service worker (é isso que transforma o site em app instalável)
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js').catch(function (e) { console.warn('SW:', e); });
+    });
+  }
+  // No iPhone, quando o app fica em segundo plano a conexão em tempo real pode cair.
+  // Ao voltar para o app, recarrega a lista para não mostrar nada desatualizado.
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState === 'visible' && typeof load === 'function') {
+      try { var p = load(); if (p && p.catch) p.catch(function () {}); } catch (e) {}
+    }
+  });
+</script>
+<!-- PWA: fim -->
